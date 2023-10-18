@@ -10,6 +10,8 @@ class Fighter:
         self.actions = jsonInfo['actions']
 
 
+def roll_dice():
+    pass
 
 def call_api(url):
     response = requests.get(url)
@@ -21,22 +23,19 @@ def choose_fighters(monsterList):
     while i < 2:
         randomInt = random.randint(0, maxNumberOfMonsters)
         api_url = f'https://www.dnd5eapi.co{monsterList["results"][randomInt]["url"]}'
-        # print(api_url)
-        i += 1
-        yield api_url
+        monster = call_api(api_url)
+        if monster["challenge_rating"] <= 5:
+            i += 1
+            yield Fighter(monster)
+        else:
+            print("too high")
 
-def get_fighter_statistics(fighter):
-    pass
 
-# Press the green button in the gutter to run the script.
+
+
 if __name__ == '__main__':
     monsters = call_api('https://www.dnd5eapi.co/api/monsters')
-    chooseFighter1, chooseFighter2 = choose_fighters(monsters)
-    fighter1Stats = call_api(chooseFighter1)
-    fighter2Stats = call_api(chooseFighter2)
-    fighter1 = Fighter(fighter1Stats)
-    fighter2 = Fighter(fighter2Stats)
-    print(fighter2Stats)
+    fighter1, fighter2 = choose_fighters(monsters)
     print(fighter2.actions)
+    print(fighter1.actions)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
