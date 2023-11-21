@@ -12,9 +12,6 @@ class Fighter:
         self.armor_class = jsonInfo['armor_class'][0]['value']
         self.attack_bonus = jsonInfo['actions'][0]['attack_bonus']
         self.initiative = roll_die(20) + proficiency_math(jsonInfo['dexterity'])
-        # self.attack_damage = [jsonInfo['actions'][0]['damage'][0]['damage_dice'].split('d')[0],
-        #                       jsonInfo['actions'][0]['damage'][0]['damage_dice'].split('d')[1].split('+')[0],
-        #                       jsonInfo['actions'][0]['damage'][0]['damage_dice'].split('+')[1]]
         self.actions = jsonInfo['actions']
 
         self.calculate_damage_die(jsonInfo)
@@ -75,11 +72,31 @@ def attack_vs_armor_class(attackBonus, armorClass):
         return False
 
 def fight(fighter1, fighter2):
+    i = 0
+    while fighter1.hit_points > 0 and fighter2.hit_points > 0:
+        print(f'round {i}')
+        if attack_vs_armor_class(fighter1.attack_bonus, fighter2.armor_class):
+            print(f"{fighter1.name} hit")
+            damage = roll_die(int(fighter1.damage_dice[1]),int(fighter1.damage_dice[0]))
+            print(f'{fighter1.name} hit for {damage}')
+            fighter2.hit_points -= damage
+            print(f'{fighter2.name} has {fighter2.hit_points} HP left')
+            if fighter2.hit_points <= 0:
+                print(f'{fighter1.name} wins!')
+                break
+        if attack_vs_armor_class(fighter2.attack_bonus, fighter1.armor_class):
+            print(f"{fighter2.name} Hit")
+            damage = roll_die(int(fighter2.damage_dice[1]),int(fighter2.damage_dice[0]))
+            print(f'{fighter2.name} hit for {damage}')
+            fighter1.hit_points -= damage
+            print(f'{fighter1.name} has {fighter1.hit_points} HP left')
+            if fighter1.hit_points <= 0:
+                print(f'{fighter2.name} wins!')
+                break
+        i += 1
 
-    if attack_vs_armor_class(fighter1.attack_bonus, fighter2.armor_class):
-        print("HIT")
-        damage = roll_die(int(fighter1.damage_dice[1]),int(fighter1.damage_dice[0]))
-        print(damage)
+
+
 
 
 
